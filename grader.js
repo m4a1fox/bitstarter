@@ -65,11 +65,21 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-u, --url <url>', 'path to herokuapp url', clone(assertURLExists))
+// .option('-u, --url <url>', 'path to herokuapp url', clone(assertURLExists), CHECKSURL_DEFAULT)
         .parse(process.argv);
-    var checkJson = checkHtmlFile(program.file, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+
+    if(!program.url){ //original logic. file existing - index.html
+        var checkJson = checkHtmlFile(program.file, program.checks);
+        var outJson = JSON.stringify(checkJson, null, 4);
+        console.log("required.main if : \n" + outJson);
+    } else { // added
+// rest.get(program.url).on('complete', function(result){
+        var checkJson = checkURL(program.url, program.checks);
+        var outJson = JSON.stringify(checkJson, null, 4);
+        console.log("require.main else : \n" + outJson);
+    };
+
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
-
